@@ -9,6 +9,9 @@
 
 #include <xcb/xcb.h>
 
+struct _XDisplay;
+typedef struct _XDisplay Display;
+
 namespace SR_GRAPH_NS {
     class X11Window : public BasicWindowImpl {
         using Super = BasicWindowImpl;
@@ -27,18 +30,15 @@ namespace SR_GRAPH_NS {
     public:
         void PollEvents() override;
 
-        xcb_intern_atom_reply_t* ChangeWMProperty(const std::string& atomName);
-
         void Close() override;
-        //void Maximize() override;
+        void Maximize() override;
         //void Restore() override;
         //void Collapse() override;
         //void Expand() override;
         //void Centralize() override;
 
         SR_NODISCARD void* GetHandle() const override;
-        SR_NODISCARD xcb_connection_t* GetConnection() const;
-        SR_NODISCARD uint32_t GetWindow() const;
+        SR_NODISCARD uint64_t GetWindow() const;
         SR_NODISCARD void* GetDisplay() const;
         SR_NODISCARD SR_MATH_NS::IVector2 GetScreenResolution() const override;
 
@@ -52,12 +52,8 @@ namespace SR_GRAPH_NS {
         void PollEventsHandler();
 
     private:
-        void* m_display = nullptr;
-        uint32_t m_window = 0;
-        xcb_connection_t* m_connection = nullptr;
-
-        xcb_intern_atom_reply_t* m_deleteWindowReply = nullptr;
-        xcb_intern_atom_reply_t* m_wmProtocols = nullptr;
+        Display* m_display = nullptr;
+        uint64_t m_window = 0;
     };
 }
 
