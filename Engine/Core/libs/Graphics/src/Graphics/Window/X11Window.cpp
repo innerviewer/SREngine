@@ -114,7 +114,12 @@ namespace SR_GRAPH_NS {
 
     void X11Window::PollEventsHandler() {
         XEvent event;
-        XPeekEvent(m_display, &event);
+
+        if (XPending(m_display) == 0) {
+            return;
+        }
+
+        XNextEvent(m_display, &event);
 
         switch (event.type) {
             case MotionNotify: {
